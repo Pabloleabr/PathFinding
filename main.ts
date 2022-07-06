@@ -1,7 +1,9 @@
 const main = document.querySelector("main");
 const start = document.getElementById("start");
 const reset = document.getElementById("reset");
+const wall = document.getElementById("wall");
 
+let draw = "normal";
 let arr = [];//arr[y][x]
 let selected = [];
 
@@ -51,7 +53,10 @@ function setGrid(){
             div.classList;
             const node = new GraphNode(div,j,i);
             div.onclick = () =>{
-                if(node.state == STATES[0] && selected.length < 2){
+                if((node.state == STATES[0] || node.state == STATES[2]) && draw == "wall"){
+                    node.state = node.state == STATES[0] ? STATES[2] : STATES[1];
+                    div.classList.toggle("wall");
+                }else if(node.state == STATES[0] && selected.length < 2 ){
                     div.classList.add(STATES[1]);
                     node.state = STATES[1];
                     selected.push(node)
@@ -105,10 +110,13 @@ function setGrid(){
     }
 }
 setGrid();
-reset.onclick  = () =>{
-    setGrid()
+reset.onclick  = () => setGrid();
+wall.onclick = () =>{
+    wall.classList.toggle("active");
+    draw = draw == "wall" ? "normal" : "wall"; 
+    console.log(draw);
+    
 }
-
 start.onclick = () =>{
     let current = selected[0]
     let exploredNodes = [];
@@ -119,7 +127,7 @@ start.onclick = () =>{
         for (const connection of current.connections) {
             const node = connection.element1 == current ? connection.element2 : connection.element1 
             
-            if (exploredNodes.every(e => e != node)  && seenNodes.every(e => e != node)) {
+            if (exploredNodes.every(e => e != node)  && seenNodes.every(e => e != node) && node.state != STATES[2]) {
                 
                 const startXDistance = Math.abs(node.x - selected[0].x);
                 const startYDistance = Math.abs(node.y - selected[0].y);

@@ -38,3 +38,9 @@ button{
 .selected:hover{
     background-color: royalblue;
 }
+.wall{
+    background-color: gray;
+}
+.active{
+    background-color: rgba(172, 255, 47, 0.555);
+}
